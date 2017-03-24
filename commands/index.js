@@ -14,7 +14,6 @@ module.exports = function commandLoader(program) {
 		var name = filename.substr(0, filename.lastIndexOf('.'));
 
 		// Require command
-		console.log(path.join(loadPath, filename));
 		var command = require(path.join(loadPath, filename));
 
 		// Initialize command
