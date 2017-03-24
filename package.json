@@ -28,7 +28,10 @@
   "config": {
     "pre-git": {
       "commit-msg": "simple",
-      "pre-commit": [],
+      "pre-commit": [
+        "npm test",
+        "npm version"
+      ],
       "pre-push": [],
       "post-commit": [],
       "post-checkout": [],
@@ -37,9 +40,5 @@
   },
   "devDependencies": {
     "pre-git": "^3.14.0"
-  },
-  "pre-commit": [
-    "npm test",
-    "npm version"
-  ]
+  }
 }
