@@ -1,43 +1,52 @@
 {
-  "name": "consolenow",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec",
-    "commit": "commit-wizard"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/arthuroliveira/consolenow.git"
-  },
-  "author": "Arthur Oliveira",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/arthuroliveira/consolenow/issues"
-  },
-  "homepage": "https://github.com/arthuroliveira/consolenow#readme",
-  "dependencies": {
-    "chai": "^3.5.0",
-    "commander": "^2.9.0",
-    "mocha": "^3.2.0"
-  },
-  "config": {
-    "pre-git": {
-      "commit-msg": "simple",
-      "pre-commit": [
-        "npm test"
-      ],
-      "pre-push": [],
-      "post-commit": [],
-      "post-checkout": [],
-      "post-merge": []
+    "name": "consolenow",
+    "version": "1.0.0",
+    "description": "",
+    "main": "commands/index.js",
+    "directories": {
+        "doc": "docs"
+    },
+    "bin": {
+        "now": "./bin/cli"
+    },
+    "scripts": {
+        "test": "./node_modules/.bin/mocha --reporter spec",
+        "commit": "commit-wizard"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/arthuroliveira/consolenow.git"
+    },
+    "author": "Arthur Oliveira",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/arthuroliveira/consolenow/issues"
+    },
+    "homepage": "https://github.com/arthuroliveira/consolenow#readme",
+    "config": {
+        "pre-git": {
+            "commit-msg": "simple",
+            "pre-commit": [
+                "npm test"
+            ],
+            "pre-push": [],
+            "post-commit": [],
+            "post-checkout": [],
+            "post-merge": []
+        }
+    },
+    "dependencies": {
+        "commander": "^2.9.0",
+        "inquirer": "^3.0.6",
+        "prompt": "^0.2.14",
+        "request": "^2.44.0",
+        "cli-table": "^0.3.0",
+        "colors": "^0.6.2"
+    },
+    "devDependencies": {
+        "chai": "^3.5.0",
+        "mocha": "^3.2.0",
+        "sinon": "^1.10.3",
+        "pre-git": "^3.14.0"
     }
-  },
-  "devDependencies": {
-    "pre-git": "^3.14.0"
-  }
 }

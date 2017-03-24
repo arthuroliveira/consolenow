@@ -1,57 +1,99 @@
-#!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
+var fs = require('fs');
+var util = require('util');
+var status = require('./lib/status');
+var request = require('request');
 var program = require('commander');
+var commands = require('./commands')(program);
+var packageJson = require('./package.json');
 
-function range(val) {
-  return val.split('..').map(Number);
-}
- 
-function list(val) {
-  return val.split(',');
-}
- 
-function collect(val, memo) {
-  memo.push(val);
-  return memo;
-}
- 
-function increaseVerbosity(v, total) {
-  return total + 1;
-}
- 
+program.LOG_PATH = process.env.HOME + '/.cli-log';
+
+// Initialize cli options
 program
-  .version('0.0.1')
-  .usage('[options] <file ...>')
-  .option('-i, --integer <n>', 'An integer argument', parseInt)
-  .option('-f, --float <n>', 'A float argument', parseFloat)
-  .option('-r, --range <a>..<b>', 'A range', range)
-  .option('-l, --list <items>', 'A list', list)
-  .option('-o, --optional [value]', 'An optional value')
-  .option('-c, --collect [value]', 'A repeatable value', collect, [])
-  .option('-v, --verbose', 'A value that can be increased', increaseVerbosity, 0)
-  .command('rmdir <dir> [otherDirs...]')
-  .action(function (dir, otherDirs) {
-    console.log('rmdir %s', dir);
-    if (otherDirs) {
-      otherDirs.forEach(function (oDir) {
-        console.log('rmdir %s', oDir);
-      });
-    }
-  })
- 
+	.version(packageJson.version)
+	.usage('<command> [options]')
+	.option('-d, --debug', 'show debug info');
 
-  .parse(process.argv);
- 
-console.log(' int: %j', program.integer);
-console.log(' float: %j', program.float);
-console.log(' optional: %j', program.optional);
-program.range = program.range || [];
-console.log(' range: %j..%j', program.range[0], program.range[1]);
-console.log(' list: %j', program.list);
-console.log(' collect: %j', program.collect);
-console.log(' verbosity: %j', program.verbose);
-console.log(' args: %j', program.args);
+// Initialize prompt
+program.prompt = require('prompt');
+program.prompt.message = '';
+program.prompt.delimiter = '';
+program.prompt.colors = false;
+
+// Turn off colors when non-interactive
+var colors = require('colors');
+colors.mode = process.stdout.isTTY ? colors.mode : 'none';
+
+// Setup logging and messaging
+var logMessages = [];
+program.log = (function (debugMode) {
+	return function _log(logEntry, noPrint) {
+		logMessages.push(logEntry);
+		if (!noPrint && debugMode) {
+			console.log('--debug-- '.cyan + logEntry);
+		}
+	};
+})(process.argv.indexOf('--debug') >= 0);
+
+program.successMessage = function successMessage() {
+	var msg = util.format.apply(this, arguments);
+	program.log('Success: ' + msg, true);
+	console.log(msg.green);
+};
+
+program.errorMessage = function errorMessage() {
+	var msg = util.format.apply(this, arguments);
+	program.log('Error: ' + msg, true);
+	console.log(msg.red);
+};
+
+program.handleError = function handleError(err, exitCode) {
+	if (err) {
+		if (err.message) {
+			program.errorMessage(err.message);
+		} else {
+			program.errorMessage(err);
+		}
+	}
+
+	console.log('For more information see: ' + program.LOG_PATH);
+
+	fs.writeFileSync(program.LOG_PATH, logMessages.join('\n') + '\n');
+
+	process.exit(exitCode || 1);
+};
+
+// Create request wrapper
+program.request = function (opts, next) {
+  if (program.debug) {
+    program.log('REQUEST: '.bold + JSON.stringify(opts, null, 2));
+  } else {
+  	program.log(opts.uri);
+  }
+  status.start();
+  return request(opts, function (err, res, body) {
+  	status.stop();
+    if (err) {
+      if (program.debug) {
+        program.errorMessage(err.message);
+      }
+      return next(err, res, body);
+    }
+    else {
+      if (program.debug) {
+        program.log('RESPONSE: '.bold + JSON.stringify(res.headers, null, 2));
+        program.log('BODY: '.bold + JSON.stringify(res.body, null, 2));
+      }
+      return next(err, res, body);
+    }
+  });
+};
+
+
+program.on('*', function() {
+	console.log('Unknown Command: ' + program.args.join(' '));
+	program.help();
+});
+
+// Process Commands
+program.parse(process.argv);
