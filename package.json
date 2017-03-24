@@ -27,9 +27,7 @@
         "pre-git": {
             "commit-msg": "simple",
             "pre-commit": [],
-            "pre-push": [
-                "npm test"                
-            ],
+            "pre-push": [],
             "post-commit": [],
             "post-checkout": [],
             "post-merge": []
