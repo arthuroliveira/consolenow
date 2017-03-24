@@ -3,4 +3,4 @@ dist/
 .sn-config.json
 .sn-sync_data.json
 npm-debug.log
-./consolenow
+consolenow
