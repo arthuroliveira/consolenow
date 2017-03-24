@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/arthuroliveira/consolenow/issues"
   },
-  "homepage": "https://github.com/arthuroliveira/consolenow#readme"
+  "homepage": "https://github.com/arthuroliveira/consolenow#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "mocha": "^3.2.0"
+  }
 }
