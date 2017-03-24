@@ -70,3 +70,8 @@ program.on('*', function () {
 
 // Process Commands
 program.parse(process.argv);
+
+// console.log(program.args)
+if (program.args.length == 0) {
+	require('./questions/inquirer.sample')
+}
