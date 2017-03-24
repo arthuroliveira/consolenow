@@ -7,6 +7,8 @@ module.exports = function(program) {
 		.action(function(name, command) {
 
 			console.log('Hello ' + name);
+			program.successMessage('Success: %s', name);
+			program.errorMessage('Error %s',name);
 			program.log(name);
 
 		});
