@@ -2,7 +2,7 @@ var sinon = require("sinon");
 var assert = require('chai').assert;
 var request = require('request');
 var MockProgram = require('../mocks/program');
-var QuoteCommand = require('../../commands/quote');
+var QuoteCommand = require('../../src/commands/quote');
 
 require('colors').mode = 'none'; // turn off colors
 

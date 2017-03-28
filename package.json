@@ -10,8 +10,7 @@
     "now": "./bin/cli"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha",
-    "commit": "commit-wizard"
+    "test": "./node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -23,16 +22,6 @@
     "url": "https://github.com/arthuroliveira/consolenow/issues"
   },
   "homepage": "https://github.com/arthuroliveira/consolenow#readme",
-  "config": {
-    "pre-git": {
-      "commit-msg": "simple",
-      "pre-commit": [],
-      "pre-push": [],
-      "post-commit": [],
-      "post-checkout": [],
-      "post-merge": []
-    }
-  },
   "dependencies": {
     "commander": "^2.9.0",
     "inquirer": "^3.0.6",
@@ -44,7 +33,6 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
-    "pre-git": "^3.14.0",
     "sinon": "^2.1.0"
   }
 }
