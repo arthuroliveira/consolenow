@@ -4,14 +4,15 @@ var request = require('request');
 var program = require('commander');
 var commands = require('./src/commands')(program);
 var packageJson = require('./package.json');
+var initialQuestions = require('./src/views/cli-questions');
 
 program.LOG_PATH = process.env.HOME + '/.cli-log';
 
 // Initialize cli options
 program
-	.version(packageJson.version)
-	.usage('<command> [options]')
-	.option('-d, --debug', 'show debug info');
+    .version(packageJson.version)
+    .usage('<command> [options]')
+    .option('-d, --debug', 'show debug info');
 
 // Initialize prompt
 program.prompt = require('prompt');
@@ -26,69 +27,69 @@ colors.mode = process.stdout.isTTY ? colors.mode : 'none';
 // Setup logging and messaging
 var logMessages = [];
 program.log = (function (debugMode) {
-	return function _log(logEntry, noPrint) {
-		logMessages.push(logEntry);
-		if (!noPrint && debugMode) {
-			console.log('--debug-- '.cyan + logEntry);
-		}
-	};
+    return function _log(logEntry, noPrint) {
+        logMessages.push(logEntry);
+        if (!noPrint && debugMode) {
+            console.log('--debug-- '.cyan + logEntry);
+        }
+    };
 })(process.argv.indexOf('--debug') >= 0 || process.argv.indexOf('-d') >= 0);
 
 program.successMessage = function successMessage() {
-	var msg = util.format.apply(this, arguments);
-	program.log('Success: ' + msg, true);
-	console.log(msg.green);
+    var msg = util.format.apply(this, arguments);
+    program.log('Success: ' + msg, true);
+    console.log(msg.green);
 };
 
 program.errorMessage = function errorMessage() {
-	var msg = util.format.apply(this, arguments);
-	program.log('Error: ' + msg, true);
-	console.log(msg.red);
+    var msg = util.format.apply(this, arguments);
+    program.log('Error: ' + msg, true);
+    console.log(msg.red);
 };
 
 program.handleError = function handleError(err, exitCode) {
-	if (err) {
-		if (err.message) {
-			program.errorMessage(err.message);
-		} else {
-			program.errorMessage(err);
-		}
-	}
+    if (err) {
+        if (err.message) {
+            program.errorMessage(err.message);
+        } else {
+            program.errorMessage(err);
+        }
+    }
 
-	console.log('For more information see: ' + program.LOG_PATH);
+    console.log('For more information see: ' + program.LOG_PATH);
 
-	fs.writeFileSync(program.LOG_PATH, logMessages.join('\n') + '\n');
+    fs.writeFileSync(program.LOG_PATH, logMessages.join('\n') + '\n');
 
-	process.exit(exitCode || 1);
+    process.exit(exitCode || 1);
 };
 
 // Create request wrapper
 program.request = function (opts, next) {
-  if (program.debug) {
-    program.log('REQUEST: '.bold + JSON.stringify(opts, null, 2));
-  } else {
-  	program.log(opts.uri);
-  }
-  return request(opts, function (err, res, body) {
-    if (err) {
-      if (program.debug) {
-        program.errorMessage(err.message);
-      }
-      return next(err, res, body);
+    if (program.debug) {
+        program.log('REQUEST: '.bold + JSON.stringify(opts, null, 2));
+    } else {
+        program.log(opts.uri);
     }
-    else {
-      if (program.debug) {
-        program.log('RESPONSE: '.bold + JSON.stringify(res.headers, null, 2));
-        program.log('BODY: '.bold + JSON.stringify(res.body, null, 2));
-      }
-      return next(err, res, body);
-    }
-  });
+    return request(opts, function (err, res, body) {
+        if (err) {
+            if (program.debug) {
+                program.errorMessage(err.message);
+            }
+            return next(err, res, body);
+        }
+        else {
+            if (program.debug) {
+                program.log('RESPONSE: '.bold + JSON.stringify(res.headers, null, 2));
+                program.log('BODY: '.bold + JSON.stringify(res.body, null, 2));
+            }
+            return next(err, res, body);
+        }
+    });
 };
 
 program.on('*', function () {
-	console.log('Unknown Command: ' + program.args.join(' '));
-	program.help();
+    console.log('Unknown Command: ' + program.args.join(' '));
+    program.help();
 });
 
 // Process Commands
@@ -96,5 +97,5 @@ program.parse(process.argv);
 
 // console.log(program.args)
 if (program.args.length == 0) {
-	require('./questions/inquirer.sample')
+    initialQuestions.init();
 }
