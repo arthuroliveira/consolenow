@@ -1,9 +1,8 @@
 var fs = require('fs');
 var util = require('util');
-var status = require('./lib/status');
 var request = require('request');
 var program = require('commander');
-var commands = require('./commands')(program);
+var commands = require('./src/commands')(program);
 var packageJson = require('./package.json');
 
 program.LOG_PATH = process.env.HOME + '/.cli-log';
@@ -70,9 +69,7 @@ program.request = function (opts, next) {
   } else {
   	program.log(opts.uri);
   }
-  status.start();
   return request(opts, function (err, res, body) {
-  	status.stop();
     if (err) {
       if (program.debug) {
         program.errorMessage(err.message);
