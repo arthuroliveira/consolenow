@@ -1,7 +1,7 @@
 var sinon  = require("sinon");
 var assert = require('chai').assert;
 var MockProgram = require('../mocks/program');
-var HelloCommand = require('../../commands/hello');
+var HelloCommand = require('../../src/commands/hello');
 
 describe('Command Hello', function () {
 	var helloCommand;
