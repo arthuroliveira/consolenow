@@ -1,4 +1,4 @@
-var sinon  = require("sinon");
+var sinon = require("sinon");
 var assert = require('chai').assert;
 var request = require('request');
 var MockProgram = require('../mocks/program');
@@ -14,8 +14,7 @@ describe('Command Quote', function () {
 		sinon.stub(console, "log").returns(void 0);
 		sinon
 			.stub(program, 'request')
-      .yields(null, null, "\"MSFT\",\"Microsoft Corpora\",46.44,N/A,\"32.80 - 47.57\",26090980,2.63,382.7B\r\n");
-
+			.yields(null, null, "\"MSFT\",\"Microsoft Corpora\",46.44,N/A,\"32.80 - 47.57\",26090980,2.63,382.7B\r\n");
 		quoteCommand = new QuoteCommand(program);
 	});
 

@@ -10,7 +10,7 @@
         "now": "./bin/cli"
     },
     "scripts": {
-        "test": "./node_modules/.bin/mocha --reporter spec",
+        "test": "./node_modules/.bin/mocha",
         "commit": "commit-wizard"
     },
     "repository": {

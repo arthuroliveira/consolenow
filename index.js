@@ -63,6 +63,32 @@ program.handleError = function handleError(err, exitCode) {
 	process.exit(exitCode || 1);
 };
 
+// Create request wrapper
+program.request = function (opts, next) {
+  if (program.debug) {
+    program.log('REQUEST: '.bold + JSON.stringify(opts, null, 2));
+  } else {
+  	program.log(opts.uri);
+  }
+  status.start();
+  return request(opts, function (err, res, body) {
+  	status.stop();
+    if (err) {
+      if (program.debug) {
+        program.errorMessage(err.message);
+      }
+      return next(err, res, body);
+    }
+    else {
+      if (program.debug) {
+        program.log('RESPONSE: '.bold + JSON.stringify(res.headers, null, 2));
+        program.log('BODY: '.bold + JSON.stringify(res.body, null, 2));
+      }
+      return next(err, res, body);
+    }
+  });
+};
+
 program.on('*', function () {
 	console.log('Unknown Command: ' + program.args.join(' '));
 	program.help();
