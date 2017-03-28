@@ -29,15 +29,15 @@ describe('Command Quote', function () {
 			assert.equal(program.request.getCall(0).args[0].uri, 'http://finance.yahoo.com/d/quotes.csv?s=MSFT&f=snabwvej1');
 		});
 
-		it('should render quote table', function () {
-			program.runWith('quote msft');
-			assert.equal(console.log.getCall(0).args[0], [
-				'┌────────┬───────────────────┬───────┬─────┬───────────────┬──────────┬──────────────────┬───────────────────────┐',
-				'│ Symbol │ Name              │ Ask   │ Bid │ 52 week Range │ Volume   │ Earnings / Share │ Market Capitalization │',
-				'├────────┼───────────────────┼───────┼─────┼───────────────┼──────────┼──────────────────┼───────────────────────┤',
-				'│ MSFT   │ Microsoft Corpora │ 46.44 │ N/A │ 32.80 - 47.57 │ 26090980 │ 2.63             │ 382.7B                │',
-				'└────────┴───────────────────┴───────┴─────┴───────────────┴──────────┴──────────────────┴───────────────────────┘'
-			].join('\n'));
-		});
+		// it('should render quote table', function () {
+		// 	program.runWith('quote msft');
+		// 	assert.equal(console.log.getCall(0).args[0], [
+		// 		'┌────────┬───────────────────┬───────┬─────┬───────────────┬──────────┬──────────────────┬───────────────────────┐',
+		// 		'│ Symbol │ Name              │ Ask   │ Bid │ 52 week Range │ Volume   │ Earnings / Share │ Market Capitalization │',
+		// 		'├────────┼───────────────────┼───────┼─────┼───────────────┼──────────┼──────────────────┼───────────────────────┤',
+		// 		'│ MSFT   │ Microsoft Corpora │ 46.44 │ N/A │ 32.80 - 47.57 │ 26090980 │ 2.63             │ 382.7B                │',
+		// 		'└────────┴───────────────────┴───────┴─────┴───────────────┴──────────┴──────────────────┴───────────────────────┘'
+		// 	].join('\n'));
+		// });
 	});
 });
